@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Notas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .form-container, .table-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 80%;
+            max-width: 600px;
+        }
+        .form-title, .table-title {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #4cae4c;
+        }
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table-container th, .table-container td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .table-container th {
+            background-color: #f2f2f2;
+        }
+        .aprovado {
+            color: green;
+        }
+        .reprovado {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-title">FORMULÁRIO</div>
+        <form id="formulario">
+            <div class="form-group">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+            <div class="form-group">
+                <label for="matricula">Matrícula:</label>
+                <input type="text" id="matricula" name="matricula" required>
+            </div>
+            <div class="form-group">
+                <label for="nota1">Nota 1:</label>
+                <input type="number" id="nota1" name="nota1" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="nota2">Nota 2:</label>
+                <input type="number" id="nota2" name="nota2" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Enviar</button>
+            </div>
+        </form>
+    </div>
+    <div class="table-container">
+        <div class="table-title">TABELA</div>
+        <div id="table-container">
+            <!-- A tabela será adicionada aqui dinamicamente -->
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('formulario').addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o envio do formulário
+
+            // Captura os valores do formulário
+            const nome = document.getElementById('nome').value;
+            const matricula = document.getElementById('matricula').value;
+            const nota1 = parseFloat(document.getElementById('nota1').value);
+            const nota2 = parseFloat(document.getElementById('nota2').value);
+            const media = ((nota1 + nota2) / 2).toFixed(2); // Calcula a média
+            const situacao = media > 5 ? 'Aprovado' : 'Reprovado'; // Determina a situação
+
+            // Verifica se a tabela já existe
+            let tableContainer = document.getElementById('table-container');
+            let table = tableContainer.querySelector('table');
+            if (!table) {
+                // Cria a tabela e cabeçalho se ainda não existir
+                table = document.createElement('table');
+                const header = table.createTHead();
+                const headerRow = header.insertRow(0);
+                const headers = ['Nome', 'Matrícula', 'Nota 1', 'Nota 2', 'Média', 'Situação'];
+                headers.forEach((text, index) => {
+                    let cell = headerRow.insertCell(index);
+                    cell.innerText = text;
+                });
+                tableContainer.appendChild(table);
+            }
+
+            // Adiciona uma nova linha na tabela com os dados do formulário
+            const newRow = table.insertRow();
+            [nome, matricula, nota1, nota2, media, situacao].forEach((text, index) => {
+                let cell = newRow.insertCell(index);
+                cell.innerText = text;
+                if (index === 5) { // Define a classe da situação
+                    cell.className = situacao === 'Aprovado' ? 'aprovado' : 'reprovado';
+                }
+            });
+
+            // Limpa o formulário após o envio
+            document.getElementById('formulario').reset();
+        });
+    </script>
+</body>
+
+
+
+</html>
